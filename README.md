@@ -35,3 +35,7 @@ Interactive Filtering: Users can select data points or categories and instantly 
 Dynamic Graphs: Real-time updates on data visualization based on user input.
 Public Access: With pyngrok integration, the dashboard is hosted on a public link, making it accessible over the internet.
 User-Friendly Design: Simple, clean interface focusing on data clarity and ease of use.
+
+OUTPUT:
+
+![Image](https://github.com/user-attachments/assets/68706914-0967-4373-8edc-d76878a19d5a)
