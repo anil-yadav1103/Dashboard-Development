@@ -1,0 +1,51 @@
+!pip install dash
+!pip install pyngrok
+import pandas as pd
+import plotly.express as px
+import dash
+from dash import dcc, html
+from dash.dependencies import Input, Output
+from flask import Flask
+from pyngrok import ngrok
+import threading
+
+# Load dataset
+import seaborn as sns
+df = sns.load_dataset("titanic").dropna()
+
+
+# Initialize Dash app
+server = Flask(__name__)
+app = dash.Dash(__name__, server=server)
+
+# Layout of dashboard
+app.layout = html.Div([
+    html.H1("Titanic Dashboard"),
+    dcc.Dropdown(
+        id='class-dropdown',
+        options=[{'label': c, 'value': c} for c in df['class'].unique()],
+        value='First',
+        clearable=False
+    ),
+    dcc.Graph(id='survival-graph')
+])
+
+# Callback for interactivity
+@app.callback(
+    Output('survival-graph', 'figure'),
+    [Input('class-dropdown', 'value')]
+)
+def update_graph(selected_class):
+    filtered_df = df[df['class'] == selected_class]
+    fig = px.histogram(filtered_df, x='sex', color='survived', barmode='group', title=f'Survival Rate for {selected_class} Class')
+    return fig
+
+# Run the app with ngrok in Colab
+def run_dashboard():
+    ngrok.set_auth_token("2uV2pVVb15Ep5FwMZkj0LjcwYDJ_3LEZ4PKaiBy44fEZT1M34")  
+    public_url = ngrok.connect(8050)
+    print("Dashboard URL:", public_url)
+    app.run_server(port=8050)
+
+thread = threading.Thread(target=run_dashboard)
+thread.start()
